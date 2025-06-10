@@ -85,8 +85,8 @@ const handleUpload = async () => {
         <Text style={{ fontSize: 16, color: '#0284c7', fontWeight: '500' }}>
         uploading...
       </Text>
-        :<Text style={{ fontSize: 16, color: '#0284c7', fontWeight: '600' }}>
-        Tap to Upload PDF
+        :<Text style={{ fontSize: 14, color: '#0284c7', fontWeight: '600' }}>
+        Upload pdf and chat with it 😘
       </Text>
       }
     </TouchableOpacity>

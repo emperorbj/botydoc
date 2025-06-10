@@ -7,6 +7,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { MaterialIcons } from '@expo/vector-icons';
 import { uploadDocument, fetchDocuments } from '../../api/api';
 import { Document } from '../../types/type';
+import DocumentUploader from '@/components/DocumentUploader';
 
 export default function Docs() {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -29,39 +30,39 @@ export default function Docs() {
     }
   };
 
-  
+
   const handleUpload = async () => {
-  try {
-    const result = await DocumentPicker.getDocumentAsync({
-      type: 'application/pdf',
-    });
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+      });
 
-    if (result.canceled) {
-      console.log('User cancelled the picker');
-      return;
+      if (result.canceled) {
+        console.log('User cancelled the picker');
+        return;
+      }
+
+      setUploading(true);
+
+      const file = {
+        uri: result.assets && result.assets[0]?.uri,
+        name: result.assets && result.assets[0]?.name || 'document.pdf',
+        type: 'application/pdf',
+      };
+
+      const response = await uploadDocument(file);
+      setSuccessMessage(`Document "${response.data.filename}" uploaded successfully!`);
+      bottomSheetRef.current?.expand();
+
+      await loadDocuments();
+    } catch (error) {
+      console.error('Upload error:', error);
+      setSuccessMessage('Failed to upload document. Please try again.');
+      bottomSheetRef.current?.expand();
+    } finally {
+      setUploading(false);
     }
-
-    setUploading(true);
-
-    const file = {
-      uri: result.assets && result.assets[0]?.uri,
-      name: result.assets && result.assets[0]?.name || 'document.pdf',
-      type: 'application/pdf',
-    };
-
-    const response = await uploadDocument(file);
-    setSuccessMessage(`Document "${response.data.filename}" uploaded successfully!`);
-    bottomSheetRef.current?.expand();
-
-    await loadDocuments();
-  } catch (error) {
-    console.error('Upload error:', error);
-    setSuccessMessage('Failed to upload document. Please try again.');
-    bottomSheetRef.current?.expand();
-  } finally {
-    setUploading(false);
-  }
-};
+  };
 
   const renderDocumentCard = ({ item }: { item: Document }) => (
     <TouchableOpacity
@@ -80,7 +81,7 @@ export default function Docs() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Upload a PDF Document</Text>
+      {/* <Text style={styles.title}>Upload a PDF Document</Text>
       <TouchableOpacity
         style={[styles.uploadButton, uploading && styles.disabledButton]}
         onPress={handleUpload}
@@ -89,7 +90,16 @@ export default function Docs() {
         <Text style={styles.uploadButtonText}>
           {uploading ? 'Uploading...' : 'Select PDF'}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <View
+        style={{
+          marginBottom: 16,
+          width: '100%',
+        }}
+      >
+
+        <DocumentUploader onUploadSuccess={fetchDocuments} />
+      </View>
 
       <FlatList
         data={documents}
@@ -119,7 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
-    paddingTop:80
+    paddingTop: 80
   },
   title: {
     fontSize: 24,
