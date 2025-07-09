@@ -39,7 +39,7 @@ An intelligent RAG (Retrieval-Augmented Generation) chatbot that enables users t
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/botydoc.git
+git clone https://github.com/emperorbj/botydoc.git
 cd botydoc
 ```
 
@@ -58,8 +58,6 @@ pip install -r requirements.txt
 4. Create `.env` file in the backend directory:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
-DATABASE_URL=sqlite:///./botydoc.db
-UPLOAD_FOLDER=./uploads
 ```
 
 5. Start the FastAPI server:
